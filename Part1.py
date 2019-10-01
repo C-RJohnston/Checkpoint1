@@ -54,7 +54,7 @@ def compare_anal_to_numeric(rmin,rmax,alpha,step):
     
 rmin=0.01
 rmax=1
-alpha=0.1
+alpha=0.01
 step=0.01
 
 plot(rmin,rmax,step,alpha)
