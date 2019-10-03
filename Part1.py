@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy.integrate as integrate
 
-    # Constants
+# Constants
 c1 = 0.0380998 # nm^2 eV h-^2/2m
 c2 = 1.43996 # nm eV e^2/4pieps0
 r0 = 0.0529177 # nm
