@@ -95,6 +95,8 @@ def submit(root,entries):
             else:
                 error_message+=(", "+errpoints[e])
         messagebox.showinfo("Entry Error","Please check entry for"+error_message)
+    #adds calculated step value to the dict of vals
+    vals['step']=vals['rmax']/vals['N']
     dict_of_vals=vals
 
 
@@ -106,7 +108,7 @@ def alpnumbutton(frame):
 def eigenbutton(frame):
     H=find_H(dict_of_vals['N'],dict_of_vals['alpha'],dict_of_vals['step'])
     vals=two_lowest_eigens(H)
-    string="The two lowest eigenvalues are:\n"+str(vals[0])+"ev and "+str(vals[1])+"ev"
+    string="The two lowest eigenvalues for α="+str(dict_of_vals['alpha'])+" are:\n"+str(vals[0])+"ev and "+str(vals[1])+"ev"
     ttk.Label(frame,text=string,justify="center").pack()
 
 
@@ -120,9 +122,8 @@ def main():
     ttk.Label(vars_frame,text="Minimum r: ").grid(row=0,column=0,padx=5,sticky="sw")
     ttk.Label(vars_frame,text="Maximum r: ").grid(row=1,column=0,padx=5,sticky="sw")
     ttk.Label(vars_frame,text="α: ").grid(row=2,column=0,padx=5,sticky="sw")
-    ttk.Label(vars_frame,text="step: ").grid(row=3,column=0,padx=5,sticky="sw")
-    ttk.Label(vars_frame,text="N: ").grid(row=4,column=0,padx=5,sticky="sw")
-    entries={"rmin":ttk.Entry(vars_frame),"rmax":ttk.Entry(vars_frame),"alpha":ttk.Entry(vars_frame),"step":ttk.Entry(vars_frame),"N":ttk.Entry(vars_frame)}
+    ttk.Label(vars_frame,text="N: ").grid(row=3,column=0,padx=5,sticky="sw")
+    entries={"rmin":ttk.Entry(vars_frame),"rmax":ttk.Entry(vars_frame),"alpha":ttk.Entry(vars_frame),"N":ttk.Entry(vars_frame)}
     ttk.Button(vars_frame,text="submit",command= lambda: submit(root,entries)).grid(row=5,column=0)
     i=0
     for items in entries.items():
