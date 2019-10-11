@@ -57,7 +57,7 @@ def compare_anal_to_numeric(rmin,rmax,alpha,step):
         diff_range.append(diff)
     return max(diff_range)
 
- #       
+ 
 def find_H(N,alpha,step):
     delta=1/dict_of_vals['step']**2*diags([1, -2, 1], [-1, 0, 1], shape=(N,N))
     V_ii=[]
@@ -71,11 +71,12 @@ def two_lowest_eigens(matrix):
     vals=np.real(eigs(matrix,k=2,which='SR')[0])
     return vals
 
-def submit(root,entries):
+def submit(entries):
     global dict_of_vals
     vals={}
     errpoints=[]
     error=False
+    #collects values from the input tab
     for items in entries.items():
         try:
             if items[0]=="N":
@@ -99,6 +100,21 @@ def submit(root,entries):
     vals['step']=vals['rmax']/vals['N']
     dict_of_vals=vals
 
+#fills the text entries with variables that give desired accuracy for α=0 and α=0.01
+def auto_populate(entries):
+    for item in entries.items():
+        item[1].delete(0,'end')
+    result=messagebox.askyesno("Which alpha?","Populate with values for α=0? (no will populate with α=0.01)")
+    if result:
+            entries['rmin'].insert(0,"0.01")
+            entries['rmax'].insert(0,"1")
+            entries['alpha'].insert(0,"0")
+            entries['N'].insert(0,"1000")
+    else:
+            entries['rmin'].insert(0,"0.01")
+            entries['rmax'].insert(0,"1")
+            entries['alpha'].insert(0,"0.01")
+            entries['N'].insert(0,"1000")
 
 def alpnumbutton(frame):
     diff=compare_anal_to_numeric(dict_of_vals['rmin'],dict_of_vals['rmax'],dict_of_vals['alpha'],dict_of_vals['step'])
@@ -124,21 +140,24 @@ def main():
     ttk.Label(vars_frame,text="α: ").grid(row=2,column=0,padx=5,sticky="sw")
     ttk.Label(vars_frame,text="N: ").grid(row=3,column=0,padx=5,sticky="sw")
     entries={"rmin":ttk.Entry(vars_frame),"rmax":ttk.Entry(vars_frame),"alpha":ttk.Entry(vars_frame),"N":ttk.Entry(vars_frame)}
-    ttk.Button(vars_frame,text="submit",command= lambda: submit(root,entries)).grid(row=5,column=0)
+    ttk.Button(vars_frame,text="submit",command= lambda: submit(entries)).grid(row=5,column=0)
+    ttk.Button(vars_frame,text="Auto Populate",command = lambda: auto_populate(entries)).grid(row=5,column=2)
     i=0
     for items in entries.items():
         items[1].grid(row=i,column=1)
         i+=1
 
-    graph_frame=ttk.Frame(notebook)
-    ttk.Button(graph_frame,text="draw graph",command= lambda: plot(dict_of_vals['rmin'],dict_of_vals['rmax'],dict_of_vals['step'],dict_of_vals['alpha'])).pack()
-    notebook.add(graph_frame,text="plot graph")
+    V_graph_frame=ttk.Frame(notebook)
+    ttk.Button(V_graph_frame,text="draw graph",command= lambda: plot(dict_of_vals['rmin'],dict_of_vals['rmax'],dict_of_vals['step'],dict_of_vals['alpha'])).pack()
+    notebook.add(V_graph_frame,text="plot graph of V")
     compare_frame=ttk.Frame(notebook)
     ttk.Button(compare_frame,text="compare analytical value to numerical value",command= lambda: alpnumbutton(compare_frame)).pack()
     notebook.add(compare_frame,text="compare analytical to numerical")
     eigen_frame=ttk.Frame(notebook)
     ttk.Button(eigen_frame,text="Find Two Lowest Eigenvalues (first two energy levels)",command= lambda: eigenbutton(eigen_frame)).pack()
     notebook.add(eigen_frame,text="Eigenvalues")
+    dE_graph_Frame=ttk.Frame(notebook)
+    #ttk.Button(dE_graph_Frame,text="draw graph",command= lambda:)
     root.mainloop()
 
 
